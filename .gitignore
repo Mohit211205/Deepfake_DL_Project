@@ -1,0 +1,6 @@
+.venv/
+.vscode/
+datasets/
+outputs/
+*.pth
+__pycache__/
