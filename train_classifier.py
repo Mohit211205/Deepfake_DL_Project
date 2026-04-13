@@ -8,9 +8,8 @@ import os
 def train_classifier(loader, epochs=5):
     model = DeepfakeClassifier().cuda()
 
-    optimizer = Adam(model.parameters(), lr=5e-5)  # lower LR for stability
-    weights = torch.tensor([1.5, 1.0]).cuda()
-    criterion = torch.nn.CrossEntropyLoss(weight=weights)
+    optimizer = Adam(model.parameters(), lr=1e-4)
+    criterion = torch.nn.CrossEntropyLoss()
 
     for epoch in range(epochs):
         model.train()
@@ -40,13 +39,12 @@ def train_classifier(loader, epochs=5):
         acc = (correct / total) * 100
         avg_loss = total_loss / len(loader)
 
-        print(f"\nEpoch {epoch+1}")
+        print(f"Epoch {epoch+1}")
         print(f"Loss: {avg_loss:.4f}, Accuracy: {acc:.2f}%")
 
-    # ✅ Save classifier model
     os.makedirs("outputs/checkpoints", exist_ok=True)
     torch.save(model.state_dict(), "outputs/checkpoints/classifier.pth")
 
-    print("\n✅ Classifier model saved!")
+    print("✅ Classifier saved successfully")
 
     return model

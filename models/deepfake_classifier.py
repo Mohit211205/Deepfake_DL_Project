@@ -7,19 +7,19 @@ class DeepfakeClassifier(nn.Module):
     def __init__(self):
         super().__init__()
 
-        backbone = models.resnet50(weights=None)
-        backbone.fc = nn.Identity()
+        # Use pretrained ResNet50
+        backbone = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V2)
 
-        self.encoder = backbone
+        num_features = backbone.fc.in_features
 
-        self.classifier = nn.Sequential(
-            nn.Linear(2048, 512),
+        backbone.fc = nn.Sequential(
+            nn.Linear(num_features, 512),
             nn.ReLU(),
             nn.Dropout(0.3),
             nn.Linear(512, 2)
         )
 
+        self.model = backbone
+
     def forward(self, x):
-        feat = self.encoder(x)
-        out = self.classifier(feat)
-        return out
+        return self.model(x)

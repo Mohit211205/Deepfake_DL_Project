@@ -21,18 +21,15 @@ def evaluate_model(model, loader):
             all_preds.extend(preds.cpu().numpy())
             all_labels.extend(y.cpu().numpy())
 
-    # Convert to numpy
     all_preds = np.array(all_preds)
     all_labels = np.array(all_labels)
 
-    # ✅ Confusion Matrix
     cm = confusion_matrix(all_labels, all_preds)
-
-    # ✅ F1 Score
     f1 = f1_score(all_labels, all_preds)
-
-    # ✅ Detailed report
     report = classification_report(all_labels, all_preds)
+
+    print("Pred counts:", np.bincount(all_preds))
+    print("Label counts:", np.bincount(all_labels))
 
     print("\nConfusion Matrix:")
     print(cm)
